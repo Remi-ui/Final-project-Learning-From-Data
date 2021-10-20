@@ -5,7 +5,7 @@ import train
 
 def create_arg_parser():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--model', nargs='?', default='naive_bayes', choices=['naive_bayes', 'svm', 'svm_optimized'])
+    parser.add_argument('--model', nargs='?', default='naive_bayes', choices=['naive_bayes', 'svm', 'svm_optimized', 'lstm', 'bert'])
 
     args = parser.parse_args()
     return args

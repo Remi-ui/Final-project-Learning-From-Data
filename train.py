@@ -44,6 +44,14 @@ def train_svm(X_train, Y_train):
     svm_classifier = svm_classifier.fit(X_train, Y_train)
     return svm_classifier
 
+def train_lstm(X_train, Y_train):
+    print('Still some code needed!')
+    return
+
+def train_bert(X_train, Y_train):
+    print('Still some code needed!')
+    return
+
 def train_model(model):
     X_train, Y_train = read_data()
 
@@ -56,6 +64,10 @@ def train_model(model):
     elif model == 'svm_optimized':
         svm_classifier = train_svm_optimized(X_train, Y_train)
         return svm_classifier
+    elif model == 'lstm':
+        lstm_model = train_lstm(X_train, Y_train)
+    elif model == 'bert':
+        bert_model = train_bert(X_train, Y_train)
     else:
         print('Something went wrong, please execute this program again and type --help after.')
 
