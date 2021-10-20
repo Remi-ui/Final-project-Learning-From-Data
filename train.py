@@ -31,6 +31,13 @@ def train_naive_bayes(X_train, Y_train):
     naive_classifier = naive_classifier.fit(X_train, Y_train)
     return naive_classifier
 
+def train_svm_optimized(X_train, Y_train):
+    vec = TfidfVectorizer(ngram_range=(1,3))
+    vec = TfidfVectorizer()
+    svm_classifier = Pipeline([('vec', vec), ('svc', SVC())])
+    svm_classifier = svm_classifier.fit(X_train, Y_train)
+    return svm_classifier
+
 def train_svm(X_train, Y_train):
     vec = TfidfVectorizer()
     svm_classifier = Pipeline([('vec', vec), ('svc', SVC())])
@@ -45,6 +52,9 @@ def train_model(model):
         return naive_classifier
     elif model == 'svm':
         svm_classifier = train_svm(X_train, Y_train)
+        return svm_classifier
+    elif model == 'svm_optimized':
+        svm_classifier = train_svm_optimized(X_train, Y_train)
         return svm_classifier
     else:
         print('Something went wrong, please execute this program again and type --help after.')
