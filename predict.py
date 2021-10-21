@@ -3,6 +3,7 @@ from sklearn.metrics import classification_report as report
 from sklearn.naive_bayes import MultinomialNB
 import os
 
+
 def read_data():
     i = 0
     documents_dev = []
@@ -18,6 +19,7 @@ def read_data():
                     documents_dev.append(article['body'])
                     labels_dev.append(article['newspaper'])
     return documents_dev, labels_dev
+
 
 def predict_model(model):
     X_dev, Y_dev = read_data()
