@@ -1,5 +1,8 @@
 import predict
+
 from sklearn.metrics import classification_report as report
+from sklearn.metrics import f1_score
+
 import argparse
 import train
 
@@ -13,7 +16,9 @@ def create_arg_parser():
 
 def model_report(model):
     Y_dev, predictions = predict.predict_model(model)
-    print(report(Y_dev, predictions, digits=3))
+    class_report = report(Y_dev, predictions, digits=3)
+    print(class_report)
+    return f1_score(Y_dev, predictions, average='weighted')
 
 
 def main():

@@ -36,7 +36,7 @@ def train_naive_bayes(X_train, Y_train):
     return naive_classifier
 
 
-def train_svm_optimized(X_train, Y_train):
+def train_svm_optimized2(X_train, Y_train):
     vec = TfidfVectorizer(ngram_range=(1,3))
     vec = TfidfVectorizer()
     svm_classifier = Pipeline([('vec', vec), ('svc', SVC())])
@@ -53,27 +53,22 @@ def train_svm(X_train, Y_train):
 
 def train_svm_optimized(X_train, Y_train):
     '''Trains and conducts hyperparameter optimization on a linear SVM.
-    Param grid dictionary can be expanded with additional parameters.
-    '''
-    vec = TfidfVectorizer(ngram_range=(1,3))
+    Param grid dictionary can be expanded with additional parameters.'''
+    vec = TfidfVectorizer()
     svm_classifier = Pipeline([('vec', vec), ('linearsvc', LinearSVC(random_state=0))])
     svm_classifier = svm_classifier.fit(X_train, Y_train)
-    Y_dev, predictions = predict.predict_model(svm_classifier)
-    print(svm_classifier.score(Y_dev, predictions))
-
+    f1 = evaluate.model_report(svm_classifier)
     param_grid = {
         'linearsvc__C': [0.1, 1, 10],
     }
 
-    best_score = 0
+    best_score = f1
     for g in ParameterGrid(param_grid):
         svm_classifier.set_params(**g)
         svm_classifier.fit(X_train, Y_train)
-        Y_dev, predictions = predict.predict_model(svm_classifier)
-        score = float(svm_classifier.score(Y_dev, predictions))
-        print(score)
-        if score > best_score:
-            best_score = score
+        current_score = evaluate.model_report(svm_classifier)
+        if current_score > best_score:
+            best_score = current_score
             best_grid = g
     print(best_grid)
     print(best_score)
