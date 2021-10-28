@@ -1,6 +1,8 @@
 import os
 import json
 import random as python_random
+import time
+from collections import Counter
 
 import numpy as np
 from sklearn.model_selection import train_test_split
@@ -9,10 +11,11 @@ import tensorflow as tf
 from sklearn.preprocessing import LabelBinarizer, LabelEncoder
 from tensorflow.keras.optimizers import SGD, Adam
 from keras.models import Sequential
-from keras.layers import Embedding, LSTM
+from keras.layers import Embedding, LSTM, Dropout
 from keras.layers.core import Dense
 from keras.initializers import Constant
 from sklearn.metrics import accuracy_score
+from sklearn.metrics import classification_report
 
 np.random.seed(1234)
 tf.random.set_seed(1234)
@@ -24,16 +27,26 @@ def read_data(directory):
     documents = []
     labels = []
     os.chdir(directory)
+    counter = Counter()
     for root, dirs, files in os.walk('.', topdown=False):
         for name in files:
             if name.endswith('filt3.sub.json'):
                 file = open(os.path.join(root, name))
                 text = json.load(file)
                 for article in text['articles']:
-                    i += 1
-                    documents.append(article['body'])
-                    labels.append(article['newspaper'])
-
+                    if article['newspaper'] not in counter.keys():
+                        documents.append(article['body'])
+                        labels.append(article['newspaper'])
+                        counter = Counter(labels)
+                    elif article['newspaper'] in counter.keys() and counter.get(article['newspaper']) < 50:
+                        documents.append(article['body'])
+                        labels.append(article['newspaper'])
+                        counter = Counter(labels)
+    # length = 0
+    # for i in documents:
+    #    length += len(i)
+    # print(length/len(documents))
+    print(counter)
     return documents, labels
 
 
@@ -70,6 +83,8 @@ def create_model(Y_train, emb_matrix):
     model = Sequential()
     model.add(Embedding(num_tokens, embedding_dim, embeddings_initializer=Constant(emb_matrix), trainable=False))
     model.add(LSTM(units=128, input_dim=embedding_dim))
+    # Dropout layer
+    model.add(Dropout(0.2))
     model.add(Dense(input_dim=embedding_dim, units=num_labels, activation="softmax"))
     model.compile(loss=loss_function, optimizer=optim, metrics=['accuracy'])
     return model
@@ -82,8 +97,11 @@ def train_model(model, X_train, Y_train, X_dev, Y_dev):
     epochs = 10
     callback = tf.keras.callbacks.EarlyStopping(monitor='val_loss', patience=3)
 
+    t0 = time.time()
     model.fit(X_train, Y_train, verbose=verbose, epochs=epochs,
               callbacks=[callback], batch_size=batch_size, validation_data=(X_dev, Y_dev))
+    train_time = time.time() - t0
+    print("Training time: ", round(train_time, 1), "seconds.")
 
     test_set_predict(model, X_dev, Y_dev, "dev")
     return model
@@ -98,15 +116,23 @@ def test_set_predict(model, X_test, Y_test, ident):
     # If you have gold data, you can calculate accuracy
     Y_test = np.argmax(Y_test, axis=1)
     print('Accuracy on own {1} set: {0}'.format(round(accuracy_score(Y_test, Y_pred), 3), ident))
+    print(classification_report(Y_test, Y_pred))
 
 
 def main():
     X_train, Y_train = read_data('/content/drive/MyDrive/Project/train')
     X_dev, Y_dev = read_data('/content/drive/MyDrive/Project/dev')
     X_train, Y_train = X_train[:12956], Y_train[:12956]
-    # X_test, Y_test = read_data('/content/drive/MyDrive/Project/test')
-    X_train, X_dev, Y_train, Y_dev = train_test_split(X_train + X_dev, Y_train + Y_dev,
-                                                      test_size=0.2, random_state=0)
+    X_test, Y_test = read_data('/content/drive/MyDrive/Project/test')
+
+    X_train, X_dev, Y_train, Y_dev = train_test_split(X_train + X_dev + X_test, Y_train + Y_dev + Y_test,
+                                                      test_size=0.2, random_state=0, shuffle=True)
+    X_train, X_test, Y_train, Y_test = train_test_split(X_train, Y_train, test_size=0.25,
+                                                        random_state=0, shuffle=True)
+
+    # print(Counter(Y_train))
+    # print(Counter(Y_dev))
+    # print(Counter(Y_test))
 
     embeddings = read_embeddings('/content/drive/MyDrive/glove/glove.6B.50d.txt')
     vectorizer = TextVectorization(standardize=None, output_sequence_length=50)
@@ -131,15 +157,12 @@ def main():
     X_train_vect = vectorizer(np.array([[s] for s in X_train])).numpy()
     X_dev_vect = vectorizer(np.array([[s] for s in X_dev])).numpy()
 
-    model = train_model(model, X_train_vect, Y_train_bin, X_train_vect[:1000], Y_train_bin[:1000])
+    model = train_model(model, X_train_vect, Y_train_bin, X_dev_vect, Y_dev_bin)
 
-    # Y_test_bin = encoder.fit_transform(Y_test)
-    # test_set_predict(model, X_test_vect)
+    Y_test_bin = encoder.fit_transform(Y_test)
+    X_test_vect = vectorizer(np.array([[s] for s in X_test])).numpy()
+    test_set_predict(model, X_test_vect, Y_test_bin, "test")
 
 
 if __name__ == '__main__':
     main()
-
-
-
-
