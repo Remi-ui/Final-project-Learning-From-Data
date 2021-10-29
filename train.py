@@ -49,12 +49,18 @@ def read_data():
                         documents.append(article['body'])
                         labels.append(article['newspaper'])
                         counter = Counter(labels)
-    
-    # newpapers = dict(zip(labels, documents))
-    # if os.path.exists("newspapers_91.json"):
-    #     os.remove("newspapers_91.json")
-    # with open('newspapers_91.json', 'w') as file:
-    #     json.dump(newpapers, file)
+    print(len(labels))
+    print(len(documents))
+    if os.path.exists("newspapers_91.json"):
+        os.remove("newspapers_91.json")
+    jsonList= []
+    i=-1
+    with open('newspapers_91.json', 'w') as file:
+        for item in documents:
+            i+=1
+            jsonList.append({"Newspaper" : labels[i], "Content" : item})
+        json.dump(jsonList, file)
+
     return documents, labels
 
 
