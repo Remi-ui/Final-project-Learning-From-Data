@@ -5,7 +5,6 @@ import os
 
 
 def read_data():
-    i = 0
     documents_dev = []
     labels_dev = []
     os.chdir('../dev')
@@ -15,7 +14,6 @@ def read_data():
                 file = open(os.path.join(root, name))
                 text = json.load(file)
                 for article in text['articles']:
-                    i += 1
                     documents_dev.append(article['body'])
                     labels_dev.append(article['newspaper'])
     return documents_dev, labels_dev
