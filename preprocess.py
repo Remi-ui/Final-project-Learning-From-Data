@@ -4,6 +4,7 @@ import os
 import json
 from collections import Counter
 import re
+import random
 
 import matplotlib.pyplot as plt
 import matplotlib
@@ -23,6 +24,7 @@ stop_words = stopwords.words('english')
 def read_data(directory, amount):
     documents = []
     labels = []
+    both = []
     os.chdir(directory)
     counter = Counter()
     for root, dirs, files in os.walk('.', topdown=False):
@@ -34,26 +36,55 @@ def read_data(directory, amount):
                     if amount == 'all':
                         documents.append(article['body'])
                         labels.append(article['newspaper'])
+                        both.append([article['newspaper'], article['body']])
                     elif amount == 'some':
                         if article['newspaper'] not in counter.keys():
                             documents.append(article['body'])
                             labels.append(article['newspaper'])
+                            both.append([article['newspaper'], article['body']])
                             counter = Counter(labels)
                         elif article['newspaper'] in counter.keys() and counter.get(article['newspaper']) < 156:
                             documents.append(article['body'])
                             labels.append(article['newspaper'])
+                            both.append([article['newspaper'], article['body']])
                             counter = Counter(labels)
-    # length = 0
-    # for i in documents:
-    #    length += len(i)
-    # print(length/len(documents))
-
     if amount == 'all':
         print(Counter(labels))
     elif amount == 'some':
         print(counter)
+    return documents, labels, both
 
-    return documents, labels
+def shuffle_data(both):
+    print(both[0])
+    random.shuffle(both)
+    print(both[0])
+    shuffled_both = []
+    labels = []
+    counter = Counter()
+    for i in both:
+        if i[0] not in counter.keys():
+            shuffled_both.append(i)
+            labels.append(i[0])
+            counter = Counter(labels)
+        elif i[0] in counter.keys() and counter.get(i[0]) < 156:
+            shuffled_both.append(i)
+            labels.append(i[0])
+            counter = Counter(labels)
+    print(counter)
+    print(len(shuffled_both))
+    return shuffled_both
+
+def write_json(shuffled_both):
+    os.chdir('..')
+    if os.path.exists("newspapers_156.json"):
+        os.remove("newspapers_156.json")
+    i = -1
+    jsonList = []
+    with open('newspapers_156.json', 'w') as file:
+        for item in shuffled_both:
+            i += 1
+            jsonList.append({"Newspaper": shuffled_both[i][0], "Content": shuffled_both[i][1]})
+        json.dump(jsonList, file)
 
 
 def plot_distribution(df):
@@ -89,21 +120,20 @@ def wordcloud(df):
 
 
 def main():
-
-    documents, labels = read_data('../Final-project-Learning-From-Data/all_data', 'all')
-    #print(documents[0])
-    #print(labels[0])
+    documents, labels, both = read_data('../Final-project-Learning-From-Data/all_data', 'all')
+    shuffled_both = shuffle_data(both)
+    write_json(shuffled_both)
 
     # Create pandas dataframe
     df = pd.DataFrame(list(zip(labels, documents)), columns=['Labels', 'Documents'])
     print(df.head())
 
     # Plot distribution
-    plot_distribution(df)
+    #plot_distribution(df)
 
     # Preprocess data and wordcloud
-    df.Documents = df.Documents.apply(lambda x: preprocess(x))
-    wordcloud(df)
+    #df.Documents = df.Documents.apply(lambda x: preprocess(x))
+    #wordcloud(df)
 
 
 
