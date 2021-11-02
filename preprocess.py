@@ -66,7 +66,7 @@ def shuffle_data(both):
             shuffled_both.append(i)
             labels.append(i[0])
             counter = Counter(labels)
-        elif i[0] in counter.keys() and counter.get(i[0]) < 156:
+        elif i[0] in counter.keys() and counter.get(i[0]) < 157:
             shuffled_both.append(i)
             labels.append(i[0])
             counter = Counter(labels)
@@ -76,11 +76,11 @@ def shuffle_data(both):
 
 def write_json(shuffled_both):
     os.chdir('..')
-    if os.path.exists("newspapers_156.json"):
-        os.remove("newspapers_156.json")
+    if os.path.exists("newspapers_157.json"):
+        os.remove("newspapers_157.json")
     i = -1
     jsonList = []
-    with open('newspapers_156.json', 'w') as file:
+    with open('newspapers_157.json', 'w') as file:
         for item in shuffled_both:
             i += 1
             jsonList.append({"Newspaper": shuffled_both[i][0], "Content": shuffled_both[i][1]})
