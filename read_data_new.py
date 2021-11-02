@@ -9,7 +9,7 @@ from collections import Counter
 def read_data():
     labels = []
     documents = []
-    f = open('newspapers_91.json')
+    f = open('newspapers_156.json')
     data = json.load(f)
     y = []
     x = 0
@@ -51,7 +51,7 @@ def main():
             documents_balanced.append(documents[i])
             y_balanced.append(y[i])
             counter = Counter(labels_balanced)
-        elif item in counter.keys() and counter.get(item) < 1155:
+        elif item in counter.keys() and counter.get(item) < 1913:
             labels_balanced.append(item)
             documents_balanced.append(documents[i])
             y_balanced.append(y[i])
@@ -74,20 +74,20 @@ def main():
             documents_dev.append(documents_balanced[i])
             y_dev.append(y_balanced[i])
             counter = Counter(labels_dev)
-        elif item in counter.keys() and counter.get(item) < 120:
+        elif item in counter.keys() and counter.get(item) < 180:
             labels_dev.append(item)
             documents_dev.append(documents_balanced[i])
             y_dev.append(y_balanced[i])
             counter = Counter(labels_dev)
 
-        elif counter.get(item) == 120:
+        elif counter.get(item) == 180:
             if item not in counter_test.keys():
                 labels_test.append(item)
                 documents_test.append(documents_balanced[i])
             
                 y_dev.append(y_balanced[i])
                 counter_test = Counter(labels_test)
-            elif item in counter_test.keys() and counter_test.get(item) < 120:
+            elif item in counter_test.keys() and counter_test.get(item) < 180:
                 labels_test.append(item)
                 documents_test.append(documents_balanced[i])
                 
@@ -97,12 +97,12 @@ def main():
     
     print("Dev set: {}\n".format(Counter(labels_dev)))
     # Send the balanced dev set to a JSON file
-    if os.path.exists("newspapers_91_upsampled_dev.json"):
-        os.remove("newspapers_91_upsampled_dev.json")
+    if os.path.exists("newspapers_156_upsampled_dev.json"):
+        os.remove("newspapers_156_upsampled_dev.json")
     
     jsonList= []
     i=-1
-    with open('newspapers_91_upsampled_dev.json', 'w') as file:
+    with open('newspapers_156_upsampled_dev.json', 'w') as file:
         for item in documents_dev:
             i+=1
             jsonList.append({"Newspaper" : labels_dev[i], "Content" : item})
@@ -111,7 +111,7 @@ def main():
     print("Test set: {}\n".format(Counter(labels_test)))
     jsonList= []
     i=-1
-    with open('newspapers_91_upsampled_test.json', 'w') as file:
+    with open('newspapers_156_upsampled_test.json', 'w') as file:
         for item in documents_test:
             i+=1
             jsonList.append({"Newspaper" : labels_test[i], "Content" : item})
@@ -133,12 +133,12 @@ def main():
     
     print("Train set: {}\n".format(Counter(labels_balanced)))
     # Send the final version of the balanced set to a json file.
-    if os.path.exists("newspapers_91_upsampled.json"):
-        os.remove("newspapers_91_upsampled.json")
+    if os.path.exists("newspapers_156_upsampled.json"):
+        os.remove("newspapers_156_upsampled.json")
     
     jsonList= []
     i=-1
-    with open('newspapers_91_upsampled.json', 'w') as file:
+    with open('newspapers_156_upsampled.json', 'w') as file:
         for item in documents_balanced:
             i+=1
             jsonList.append({"Newspaper" : labels_balanced[i], "Content" : item})
