@@ -1,5 +1,6 @@
 import json
 import os
+import random
 
 from sklearn.pipeline import Pipeline
 from sklearn.feature_extraction.text import TfidfVectorizer
@@ -25,44 +26,25 @@ from sklearn.preprocessing import LabelEncoder
 from keras.utils import np_utils
 from tensorflow.keras.layers import Bidirectional, LSTM, Dense, Input
 
+np.random.seed(1234)
+tf.random.set_seed(1234)
+random.seed(1234)
+
 module_url = "https://tfhub.dev/tensorflow/bert_en_uncased_L-12_H-768_A-12/1"
 bert_layer = hub.KerasLayer(module_url, trainable=True)
 
-
 def read_data():
-    i = 0
-    documents = []
     labels = []
-    os.chdir('/content/gdrive/MyDrive/AS5/all_set')
-    counter = Counter()
-    for root, dirs, files in os.walk('.', topdown=False):
-        for name in files:
-            if name.endswith('filt3.sub.json'):
-                file = open(os.path.join(root, name))
-                text = json.load(file)    
-                for article in text['articles']:
-                    if article['newspaper'] not in counter.keys():
-                        documents.append(article['body'])
-                        labels.append(article['newspaper'])
-                        counter = Counter(labels)
-                    elif article['newspaper'] in counter.keys() and counter.get(article['newspaper']) < 91:
-                        documents.append(article['body'])
-                        labels.append(article['newspaper'])
-                        counter = Counter(labels)
-    print(len(labels))
+    documents = []
+    f = open('/content/gdrive/MyDrive/AS5/all_set/newspapers_91.json')
+    data = json.load(f)
+    for i in data:
+        labels.append(i['Newspaper'])
+        documents.append(i['Content'])
+    
     print(len(documents))
-    if os.path.exists("newspapers_91.json"):
-        os.remove("newspapers_91.json")
-    jsonList= []
-    i=-1
-    with open('newspapers_91.json', 'w') as file:
-        for item in documents:
-            i+=1
-            jsonList.append({"Newspaper" : labels[i], "Content" : item})
-        json.dump(jsonList, file)
-
+    print(len(labels))
     return documents, labels
-
 
 def train_naive_bayes(X_train, Y_train):
     vec = TfidfVectorizer()
@@ -153,7 +135,7 @@ def train_bert(bert_layer, max_len=512):
     x = LSTM(128)(x)
     x = Dropout(0.25)(x)
     x = Dense(9, activation='softmax')(x)
-    opt = SGD(learning_rate=0.01)
+    opt = Adam(learning_rate=0.00001)
 
     model = Model(inputs=[input_word_ids, input_mask, segment_ids], outputs=x)
     model.compile(optimizer=opt , loss='categorical_crossentropy', metrics=['accuracy'])
@@ -198,7 +180,7 @@ def train_model(model):
             train_input, train_labels,
             validation_data=(dev_input, dev_labels),
             epochs=100,
-            batch_size=32
+            batch_size=16
         )
     else:
         print('Something went wrong, please execute this program again and type --help after.')
