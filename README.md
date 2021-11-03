@@ -16,5 +16,5 @@ Final project for Learning From Data
 
 Run output_evaluate.py and specify the path to the desired prediction_vs_gold file. If (for example) the desired file is located in experiments/naive_bayes, run the following command:
 ```
-<em>python3 output_evaluate.py --path experiments/naive_bayes/prediction_vs_gold.txt</em>
+python3 output_evaluate.py --path experiments/naive_bayes/prediction_vs_gold.txt
 ```
