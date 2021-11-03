@@ -4,6 +4,11 @@ Final project for Learning From Data
 
 <h2>Installation of dependencies</h2>
 
+The required dependencies can be installed with:
+```
+pip install -r requirements.txt
+```
+
 <h2>How to train the model</h2>
 
 <h2>How to preprocess the data so it is in the correct format</h2>  
