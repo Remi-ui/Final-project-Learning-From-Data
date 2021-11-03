@@ -23,6 +23,11 @@ python3 evaluate.py --model svm --eval newspapers_157_upsampled_dev.json
 
 <h2>How to use one of your already trained models to predict on unseen data</h2>
 
+ As both LSTM models and BERT models take quite some time to train some models are available to use straight away. 
+ ```
+ INSERT COMMAND FOR THIS
+ ```
+ 
 <h2>How to evaluate an output file using the gold standard</h2>
 
 Run output_evaluate.py and specify the path to the desired prediction_vs_gold file. If (for example) the desired file is located in experiments/naive_bayes, run the following command:
