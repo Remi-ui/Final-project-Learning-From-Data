@@ -34,3 +34,4 @@ Run output_evaluate.py and specify the path to the desired prediction_vs_gold fi
 ```
 python3 output_evaluate.py --path experiments/naive_bayes/prediction_vs_gold.txt
 ```
+The above code will generate a classification report with scores for each class.
