@@ -18,9 +18,9 @@ def create_arg_parser():
 def model_report(model):
     Y_dev, predictions = predict.predict_model(model)
     i=0
-    with open('experiments/prediction_vs_gold.txt', 'w') as f:
+    with open('experiments/naive_bayes/prediction_vs_gold.txt', 'w') as f:
         for item in Y_dev:
-            f.write("{} - {}\n".format(item, Y_dev[i]))
+            f.write("{} - {}\n".format(item, predictions[i]))
             i+=1
     f.close()
 
