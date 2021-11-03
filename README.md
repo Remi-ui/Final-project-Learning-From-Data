@@ -15,4 +15,4 @@ Final project for Learning From Data
 <h2>How to evaluate an output file using the gold standard</h2>
 
 Run output_evaluate.py and specify the path to the desired prediction_vs_gold file. If (for example) the desired file is located in experiments/naive_bayes, run the following command:
-<em>python3 output_evaluate.py --path experiments/naive_bayes/prediction_vs_gold.txt</em>
+  <em>python3 output_evaluate.py --path experiments/naive_bayes/prediction_vs_gold.txt</em>
