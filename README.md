@@ -1,6 +1,7 @@
 # Final-project-Learning-From-Data
-Final project for Learning From Data
-
+This file contains information about how to run, experiment with and evaluate the different models for the final project for Learning from Data. For questions or concerns please reach out:
+r.m.thuss@student.rug.nl
+r.j.van.timmeren@student.rug.nl
 
 <h2>Installation of dependencies</h2>
 
