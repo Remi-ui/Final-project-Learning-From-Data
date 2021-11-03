@@ -1,5 +1,6 @@
 # Final-project-Learning-From-Data
-This file contains information about how to run, experiment with and evaluate the different models for the final project for Learning from Data. For questions or concerns please reach out to:\n
+This file contains information about how to run, experiment with and evaluate the different models for the final project for Learning from Data. For questions or concerns please reach out to:
+
 Remi Thüss - r.m.thuss@student.rug.nl
 Robert van Timmeren - r.j.van.timmeren@student.rug.nl
 
