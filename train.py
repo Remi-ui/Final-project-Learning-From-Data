@@ -18,7 +18,7 @@ import numpy as np
 import tensorflow_hub as hub
 import tokenization
 import tensorflow as tf
-from tensorflow.keras.layers import Dense, Input, Bidirectional, LSTM, Dropout
+from tensorflow.keras.layers import Dense, Input, Bidirectional, LSTM, Dropout, Flatten
 from tensorflow.keras.optimizers import Adam, SGD
 from tensorflow.keras.models import Model
 from tensorflow.keras.callbacks import ModelCheckpoint
@@ -29,6 +29,7 @@ from tensorflow.keras.layers import Bidirectional, LSTM, Dense, Input
 np.random.seed(1234)
 tf.random.set_seed(1234)
 random.seed(1234)
+random_state = 1234
 
 module_url = "https://tfhub.dev/tensorflow/bert_en_uncased_L-12_H-768_A-12/1"
 bert_layer = hub.KerasLayer(module_url, trainable=True)
@@ -36,14 +37,12 @@ bert_layer = hub.KerasLayer(module_url, trainable=True)
 def read_data():
     labels = []
     documents = []
-    f = open('/content/gdrive/MyDrive/AS5/all_set/newspapers_91.json')
+    f = open('newspapers_157_upsampled.json')
     data = json.load(f)
     for i in data:
         labels.append(i['Newspaper'])
         documents.append(i['Content'])
-    
-    print(len(documents))
-    print(len(labels))
+        
     return documents, labels
 
 def train_naive_bayes(X_train, Y_train):
@@ -63,7 +62,7 @@ def train_svm_optimized2(X_train, Y_train):
 
 def train_svm(X_train, Y_train):
     vec = TfidfVectorizer()
-    svm_classifier = Pipeline([('vec', vec), ('svc', SVC())])
+    svm_classifier = Pipeline([('vec', vec), ('svc', SVC(random_state=random_state))])
     svm_classifier = svm_classifier.fit(X_train, Y_train)
     return svm_classifier
 
@@ -72,7 +71,7 @@ def train_svm_optimized(X_train, Y_train):
     '''Trains and conducts hyperparameter optimization on a linear SVM.
     Param grid dictionary can be expanded with additional parameters.'''
     vec = TfidfVectorizer()
-    svm_classifier = Pipeline([('vec', vec), ('linearsvc', LinearSVC(random_state=0))])
+    svm_classifier = Pipeline([('vec', vec), ('linearsvc', LinearSVC(random_state=random_state))])
     svm_classifier = svm_classifier.fit(X_train, Y_train)
     f1 = evaluate.model_report(svm_classifier)
     param_grid = {
@@ -127,13 +126,13 @@ def train_bert(bert_layer, max_len=512):
     input_word_ids = Input(shape=(max_len,), dtype=tf.int32, name="input_word_ids")
     input_mask = Input(shape=(max_len,), dtype=tf.int32, name="input_mask")
     segment_ids = Input(shape=(max_len,), dtype=tf.int32, name="segment_ids")
-    print("/nwith lstm now@!/n")
 
     _, sequence_output = bert_layer([input_word_ids, input_mask, segment_ids])
     clf_output = sequence_output[:, 0, :]
     x = tf.expand_dims(clf_output, axis=-1)
-    x = LSTM(128)(x)
-    x = Dropout(0.25)(x)
+    #x = LSTM(128)(x)
+    #x = Dropout(0.25)(x)
+    x = Flatten()(x)
     x = Dense(9, activation='softmax')(x)
     opt = Adam(learning_rate=0.00001)
 
@@ -160,13 +159,13 @@ def train_model(model):
         vocab_file = bert_layer.resolved_object.vocab_file.asset_path.numpy()
         do_lower_case = bert_layer.resolved_object.do_lower_case.numpy()
         tokenizer = tokenization.FullTokenizer(vocab_file, do_lower_case)
-
+        
         le = LabelEncoder()
         Y_train_vec = np_utils.to_categorical(le.fit_transform(Y_train))
         
-        X_train, X_dev, Y_train_vec, Y_dev = train_test_split(X_train, Y_train_vec, test_size=0.2, shuffle=True)
-        
-        #X_dev, Y_dev = predict.read_data()
+        X_dev, Y_dev = predict.read_data()
+        Y_dev = np_utils.to_categorical(le.fit_transform(Y_dev))
+
         train_input = bert_encode(X_train, tokenizer, max_len=200)
         dev_input = bert_encode(X_dev, tokenizer, max_len=200)
         
@@ -174,14 +173,17 @@ def train_model(model):
         dev_labels = Y_dev
 
         bert_model = train_bert(bert_layer, max_len=200)
-        print("done!")
 
-        train_history = bert_model.fit(
+        bert_model.fit(
             train_input, train_labels,
-            validation_data=(dev_input, dev_labels),
-            epochs=100,
+            validation_data=(dev_input, ra),
+            epochs=1,
             batch_size=16
         )
+
+        #bert_model.save("gdrive/MyDrive/AS5/my_model.h5") #using h5 extension
+        bert_model.save_weights('model.hdf5')
+        return bert_model
     else:
         print('Something went wrong, please execute this program again and type --help after.')
 

@@ -1,21 +1,19 @@
 import json
 from sklearn.metrics import classification_report as report
 from sklearn.naive_bayes import MultinomialNB
+import evaluate
 import os
 
-
 def read_data():
-    documents_dev = []
     labels_dev = []
-    os.chdir('../dev')
-    for root, dirs, files in os.walk('.', topdown=False):
-        for name in files:
-            if name.endswith('filt3.sub.json'):
-                file = open(os.path.join(root, name))
-                text = json.load(file)
-                for article in text['articles']:
-                    documents_dev.append(article['body'])
-                    labels_dev.append(article['newspaper'])
+    documents_dev = []
+    args = evaluate.create_arg_parser()
+    f = open(args.eval)
+    data = json.load(f)
+    for i in data:
+        labels_dev.append(i['Newspaper'])
+        documents_dev.append(i['Content'])
+    
     return documents_dev, labels_dev
 
 
