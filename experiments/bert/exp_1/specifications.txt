@@ -1,0 +1,5 @@
+Seed: 11
+Model: full_with_callback.h5
+learning: Adam(0.00001)
+Batch size: 16
+Epochs: 4
