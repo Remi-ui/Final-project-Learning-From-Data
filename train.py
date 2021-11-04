@@ -26,15 +26,18 @@ from sklearn.preprocessing import LabelEncoder
 from keras.utils import np_utils
 from tensorflow.keras.layers import Bidirectional, LSTM, Dense, Input
 
-np.random.seed(1234)
-tf.random.set_seed(1234)
-random.seed(1234)
-random_state = 1234
+np.random.seed(11)
+tf.random.set_seed(11)
+random.seed(11)
+random_state = 11
 
 module_url = "https://tfhub.dev/tensorflow/bert_en_uncased_L-12_H-768_A-12/1"
 bert_layer = hub.KerasLayer(module_url, trainable=True)
 
+
 def read_data():
+    '''Reads the upsampled data and returns the documents (article) and the labels (newspaper)
+    in a list.'''
     labels = []
     documents = []
     f = open('newspapers_157_upsampled.json')
@@ -46,48 +49,65 @@ def read_data():
     return documents, labels
 
 def train_naive_bayes(X_train, Y_train):
+    '''Trains a Naive Bayes model on the provided train data with
+    Tfidf vectors.'''
     vec = TfidfVectorizer()
     naive_classifier = Pipeline([('vec', vec), ('cls', MultinomialNB())])
     naive_classifier = naive_classifier.fit(X_train, Y_train)
     return naive_classifier
 
 
-def train_svm_optimized2(X_train, Y_train):
-    vec = TfidfVectorizer(ngram_range=(1,3))
-    vec = TfidfVectorizer()
-    svm_classifier = Pipeline([('vec', vec), ('svc', SVC())])
-    svm_classifier = svm_classifier.fit(X_train, Y_train)
-    return svm_classifier
-
-
 def train_svm(X_train, Y_train):
+    '''Trains a Support Vector machine with an rbf kernel on the provided
+    train data with Tfidf vectors.'''
     vec = TfidfVectorizer()
-    svm_classifier = Pipeline([('vec', vec), ('svc', SVC(random_state=random_state))])
+    svm_classifier = Pipeline([('vec', vec), ('svc', LinearSVC(random_state=random_state))])
     svm_classifier = svm_classifier.fit(X_train, Y_train)
     return svm_classifier
 
 
 def train_svm_optimized(X_train, Y_train):
-    '''Trains and conducts hyperparameter optimization on a linear SVM.
-    Param grid dictionary can be expanded with additional parameters.'''
+    '''Trains and conducts hyperparameter optimization on a linear SVM with
+    Tfidf vectors. The parameter grid dictionary can be expanded with additional parameters.
+    Currently optimizes the C value, penalty, loss and tol parameters.'''
     vec = TfidfVectorizer()
     svm_classifier = Pipeline([('vec', vec), ('linearsvc', LinearSVC(random_state=random_state))])
     svm_classifier = svm_classifier.fit(X_train, Y_train)
+    #print(svm_classifier.get_params().keys())
     f1 = evaluate.model_report(svm_classifier)
+
     param_grid = {
-        'linearsvc__C': [0.1, 1, 10],
+        'linearsvc__C': [0.01, 0.1, 1, 10],
+        'linearsvc__penalty': ['l1', 'l2'],
+        'linearsvc__loss': ['hinge', 'squared_hinge'],
+        'linearsvc__tol': [1e-3, 1e-4, 1e-5, 1e-6],
+        'vec__ngram_range': [(1,1), (1,2), (2,2)],
+        'vec__stop_words': ['english', None]
+    }
+
+    # Optimal svc: 'linearsvc__C': 0.1, 'linearsvc__loss': 'squared_hinge',
+    # 'linearsvc__penalty': 'l2', 'linearsvc__tol': 0.0001, 'vec__ngram_range': (1, 1), 'vec__stop_words': None
+    param_grid = {
+        'linearsvc__C': [0.1],
+        'linearsvc__loss': ['squared_hinge'],
+        'linearsvc__penalty': ['l2'],
+        'linearsvc__tol': [0.0001],
+        'vec__ngram_range': [(1, 1)],
+        'vec__stop_words': [None]
     }
 
     best_score = f1
     for g in ParameterGrid(param_grid):
-        svm_classifier.set_params(**g)
-        svm_classifier.fit(X_train, Y_train)
-        current_score = evaluate.model_report(svm_classifier)
-        if current_score > best_score:
-            best_score = current_score
-            best_grid = g
+        if g['linearsvc__loss'] != 'hinge' and g['linearsvc__penalty'] != 'l1':
+            svm_classifier.set_params(**g)
+            svm_classifier.fit(X_train, Y_train)
+            current_score = evaluate.model_report(svm_classifier)
+            if current_score > best_score:
+                best_score = current_score
+                best_grid = g
+    svm_classifier.set_params(**best_grid)
+    svm_classifier.fit(X_train, Y_train)
     print(best_grid)
-    print(best_score)
     return svm_classifier
 
 
@@ -97,9 +117,7 @@ def train_lstm(X_train, Y_train):
 
 
 def bert_encode(texts, tokenizer, max_len=512):
-
     #texts = np.array(texts)[indices.astype(int)]
-
     all_tokens = []
     all_masks = []
     all_segments = []
@@ -121,6 +139,7 @@ def bert_encode(texts, tokenizer, max_len=512):
         all_segments.append(segment_ids)
     
     return np.array(all_tokens), np.array(all_masks), np.array(all_segments)
+
 
 def train_bert(bert_layer, max_len=512):
     input_word_ids = Input(shape=(max_len,), dtype=tf.int32, name="input_word_ids")
