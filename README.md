@@ -38,3 +38,7 @@ Run output_evaluate.py and specify the path to the desired prediction_vs_gold fi
 python3 output_evaluate.py --path experiments/naive_bayes/prediction_vs_gold.txt
 ```
 The above code will generate a classification report with scores for each class.
+If you'd like to evaluate a file that was generated from a bert model --bert needs to be set to true as follows:
+```
+python3 output_evaluate.py --path experiments/path/prediction_vs_gold.txt --bert True
+```
