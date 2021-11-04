@@ -75,7 +75,6 @@ def train_svm_optimized(X_train, Y_train):
     svm_classifier = svm_classifier.fit(X_train, Y_train)
     #print(svm_classifier.get_params().keys())
     f1 = evaluate.model_report(svm_classifier)
-
     param_grid = {
         'linearsvc__C': [0.01, 0.1, 1, 10],
         'linearsvc__penalty': ['l1', 'l2'],
