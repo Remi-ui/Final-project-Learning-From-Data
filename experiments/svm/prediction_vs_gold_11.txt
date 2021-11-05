@@ -33,7 +33,7 @@ Sydney Morning Herald (Australia) - The Age (Melbourne, Australia)
 Sydney Morning Herald (Australia) - Sydney Morning Herald (Australia)
 Sydney Morning Herald (Australia) - The Age (Melbourne, Australia)
 Sydney Morning Herald (Australia) - Sydney Morning Herald (Australia)
-Sydney Morning Herald (Australia) - The Age (Melbourne, Australia)
+Sydney Morning Herald (Australia) - The Hindu
 Sydney Morning Herald (Australia) - The Hindu
 Sydney Morning Herald (Australia) - Mail & Guardian
 Sydney Morning Herald (Australia) - Sydney Morning Herald (Australia)
@@ -181,8 +181,8 @@ The New York Times - The Age (Melbourne, Australia)
 The New York Times - The Washington Post
 The New York Times - The New York Times
 The New York Times - The New York Times
-The New York Times - The Australian
-The New York Times - The Age (Melbourne, Australia)
+The New York Times - Mail & Guardian
+The New York Times - The New York Times
 The New York Times - The Times (South Africa)
 The New York Times - Sydney Morning Herald (Australia)
 The New York Times - The Age (Melbourne, Australia)
@@ -306,7 +306,7 @@ The New York Times - Mail & Guardian
 The New York Times - Sydney Morning Herald (Australia)
 The New York Times - The New York Times
 The New York Times - The Hindu
-The New York Times - The Age (Melbourne, Australia)
+The New York Times - The Washington Post
 The New York Times - The Times of India (TOI)
 The New York Times - The New York Times
 The New York Times - The Australian
@@ -343,7 +343,7 @@ Sydney Morning Herald (Australia) - The New York Times
 Sydney Morning Herald (Australia) - The Times of India (TOI)
 Sydney Morning Herald (Australia) - The New York Times
 Sydney Morning Herald (Australia) - Sydney Morning Herald (Australia)
-The Washington Post - The New York Times
+The Washington Post - The Washington Post
 The Washington Post - The New York Times
 The Washington Post - The New York Times
 The Washington Post - The New York Times
@@ -358,7 +358,7 @@ The Washington Post - The New York Times
 The Washington Post - The Times (South Africa)
 The Washington Post - The New York Times
 The Washington Post - The New York Times
-Sydney Morning Herald (Australia) - The Hindu
+Sydney Morning Herald (Australia) - The Times (South Africa)
 Sydney Morning Herald (Australia) - The Times (South Africa)
 Sydney Morning Herald (Australia) - The Australian
 Sydney Morning Herald (Australia) - Mail & Guardian
@@ -438,7 +438,7 @@ The Washington Post - The Hindu
 The Washington Post - The New York Times
 The Washington Post - The Times of India (TOI)
 The Washington Post - The Hindu
-The Washington Post - Mail & Guardian
+The Washington Post - The Times (South Africa)
 The Washington Post - The Hindu
 The Washington Post - The Washington Post
 The Washington Post - The Washington Post
@@ -496,7 +496,7 @@ Sydney Morning Herald (Australia) - Sydney Morning Herald (Australia)
 Sydney Morning Herald (Australia) - The New York Times
 Sydney Morning Herald (Australia) - The Washington Post
 Sydney Morning Herald (Australia) - The Washington Post
-Sydney Morning Herald (Australia) - The New York Times
+Sydney Morning Herald (Australia) - Sydney Morning Herald (Australia)
 Sydney Morning Herald (Australia) - The New York Times
 Sydney Morning Herald (Australia) - The New York Times
 Sydney Morning Herald (Australia) - The Australian
@@ -527,14 +527,14 @@ The Age (Melbourne, Australia) - Sydney Morning Herald (Australia)
 The Age (Melbourne, Australia) - Sydney Morning Herald (Australia)
 The Age (Melbourne, Australia) - The Australian
 The Age (Melbourne, Australia) - Sydney Morning Herald (Australia)
-The Age (Melbourne, Australia) - The New York Times
+The Age (Melbourne, Australia) - The Washington Post
 The Age (Melbourne, Australia) - The Australian
 The Age (Melbourne, Australia) - Sydney Morning Herald (Australia)
 The Age (Melbourne, Australia) - The Age (Melbourne, Australia)
 The Age (Melbourne, Australia) - The Age (Melbourne, Australia)
 The Age (Melbourne, Australia) - The Washington Post
 The Age (Melbourne, Australia) - The Washington Post
-The Age (Melbourne, Australia) - The Australian
+The Age (Melbourne, Australia) - The Age (Melbourne, Australia)
 The Age (Melbourne, Australia) - The Age (Melbourne, Australia)
 The Age (Melbourne, Australia) - The Washington Post
 The Age (Melbourne, Australia) - The Age (Melbourne, Australia)
@@ -548,7 +548,7 @@ The Age (Melbourne, Australia) - The Age (Melbourne, Australia)
 The Age (Melbourne, Australia) - The Australian
 The Age (Melbourne, Australia) - The Age (Melbourne, Australia)
 The Age (Melbourne, Australia) - The Age (Melbourne, Australia)
-The Age (Melbourne, Australia) - The Australian
+The Age (Melbourne, Australia) - The Washington Post
 The Age (Melbourne, Australia) - The Age (Melbourne, Australia)
 The Age (Melbourne, Australia) - The Times (South Africa)
 The Age (Melbourne, Australia) - The Age (Melbourne, Australia)
@@ -556,7 +556,7 @@ The Age (Melbourne, Australia) - The Age (Melbourne, Australia)
 The Age (Melbourne, Australia) - Sydney Morning Herald (Australia)
 The Age (Melbourne, Australia) - The Age (Melbourne, Australia)
 The Age (Melbourne, Australia) - The Australian
-The Age (Melbourne, Australia) - Sydney Morning Herald (Australia)
+The Age (Melbourne, Australia) - The Times of India (TOI)
 The Age (Melbourne, Australia) - The Washington Post
 The Age (Melbourne, Australia) - The Australian
 Sydney Morning Herald (Australia) - The Times (South Africa)
@@ -711,7 +711,7 @@ The Age (Melbourne, Australia) - The Times (South Africa)
 The Age (Melbourne, Australia) - The New York Times
 The Age (Melbourne, Australia) - The Age (Melbourne, Australia)
 The Age (Melbourne, Australia) - Sydney Morning Herald (Australia)
-The Age (Melbourne, Australia) - Sydney Morning Herald (Australia)
+The Age (Melbourne, Australia) - The Age (Melbourne, Australia)
 The Age (Melbourne, Australia) - The New York Times
 The Age (Melbourne, Australia) - The Australian
 The Age (Melbourne, Australia) - The Australian
@@ -831,7 +831,7 @@ The Australian - The Times (South Africa)
 The Australian - The Times (South Africa)
 The Australian - The Times (South Africa)
 The Australian - The Times (South Africa)
-The Australian - Mail & Guardian
+The Australian - The Times (South Africa)
 The Australian - The Times (South Africa)
 The Australian - The Times (South Africa)
 The Australian - The Australian
@@ -848,7 +848,7 @@ The Australian - The New York Times
 The Australian - Mail & Guardian
 The Australian - The Age (Melbourne, Australia)
 The Australian - The Times (South Africa)
-The Australian - Sydney Morning Herald (Australia)
+The Australian - The New York Times
 The Australian - The Times (South Africa)
 The Australian - The Times (South Africa)
 The Australian - Mail & Guardian
@@ -899,7 +899,7 @@ The Age (Melbourne, Australia) - The Age (Melbourne, Australia)
 The Age (Melbourne, Australia) - The Australian
 The Age (Melbourne, Australia) - The Times (South Africa)
 The Times of India (TOI) - The Times (South Africa)
-The Times of India (TOI) - The New York Times
+The Times of India (TOI) - The Times (South Africa)
 The Times of India (TOI) - The Times of India (TOI)
 The Times of India (TOI) - The Hindu
 The Times of India (TOI) - The Hindu
@@ -1000,7 +1000,7 @@ The Times of India (TOI) - Mail & Guardian
 The Times of India (TOI) - The Times (South Africa)
 The Times of India (TOI) - The Age (Melbourne, Australia)
 The Times of India (TOI) - The Times of India (TOI)
-The Times of India (TOI) - The Hindu
+The Times of India (TOI) - The Times (South Africa)
 The Times of India (TOI) - The Times of India (TOI)
 The Times of India (TOI) - The Times of India (TOI)
 The Times of India (TOI) - The Times (South Africa)
@@ -1045,7 +1045,7 @@ The Times of India (TOI) - The Hindu
 The Times of India (TOI) - The Times of India (TOI)
 The Times of India (TOI) - The Australian
 The Times of India (TOI) - The Times of India (TOI)
-The Times of India (TOI) - Sydney Morning Herald (Australia)
+The Times of India (TOI) - The Times of India (TOI)
 The Times of India (TOI) - The Times of India (TOI)
 The Times of India (TOI) - The Australian
 The Times of India (TOI) - The Hindu
@@ -1073,7 +1073,7 @@ The Times of India (TOI) - The Times of India (TOI)
 The Times of India (TOI) - The Hindu
 The Times of India (TOI) - The Times of India (TOI)
 The Times of India (TOI) - The Hindu
-The Times of India (TOI) - The Times of India (TOI)
+The Times of India (TOI) - The Hindu
 The Times of India (TOI) - The Times of India (TOI)
 The Times of India (TOI) - The Times of India (TOI)
 The Times of India (TOI) - The Times of India (TOI)
@@ -1282,11 +1282,11 @@ The Hindu - The Times of India (TOI)
 The Hindu - The Hindu
 The Hindu - The Times of India (TOI)
 The Hindu - The New York Times
-The Hindu - The Times of India (TOI)
+The Hindu - The Times (South Africa)
 The Hindu - The Hindu
 The Hindu - The Age (Melbourne, Australia)
 The Hindu - The Times of India (TOI)
-The Hindu - The New York Times
+The Hindu - The Times (South Africa)
 The Hindu - The Australian
 The Hindu - The Age (Melbourne, Australia)
 The Hindu - The Times of India (TOI)
@@ -1481,7 +1481,7 @@ The Times (South Africa) - The Times (South Africa)
 The Times (South Africa) - Mail & Guardian
 The Times (South Africa) - The Hindu
 The Times (South Africa) - The Age (Melbourne, Australia)
-The Times (South Africa) - The Hindu
+The Times (South Africa) - The Times (South Africa)
 The Times (South Africa) - The Age (Melbourne, Australia)
 The Times (South Africa) - The Hindu
 The Times (South Africa) - The Hindu
@@ -1533,7 +1533,7 @@ The Times (South Africa) - The New York Times
 The Times (South Africa) - Mail & Guardian
 The Times (South Africa) - Sydney Morning Herald (Australia)
 The Times (South Africa) - The New York Times
-The Times (South Africa) - Mail & Guardian
+The Times (South Africa) - The Hindu
 The Times (South Africa) - The Times of India (TOI)
 The Times (South Africa) - Sydney Morning Herald (Australia)
 The Times (South Africa) - Mail & Guardian
@@ -1560,7 +1560,7 @@ The Times (South Africa) - The Times (South Africa)
 The Times (South Africa) - The Washington Post
 The Times (South Africa) - The Times (South Africa)
 The Times (South Africa) - The Times of India (TOI)
-The Times (South Africa) - The Times of India (TOI)
+The Times (South Africa) - The Times (South Africa)
 The Times (South Africa) - The Times (South Africa)
 The Times (South Africa) - The Times (South Africa)
 The Times (South Africa) - The Washington Post

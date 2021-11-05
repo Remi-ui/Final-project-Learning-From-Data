@@ -3,7 +3,7 @@ import argparse
 
 def create_arg_parser():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--path', default = 'experiments/prediction_vs_gold.txt', type=str)
+    parser.add_argument('--path', default = 'experiments/prediction_vs_gold_11.txt', type=str)
     parser.add_argument('--bert', default = False)
     args = parser.parse_args()
     return args

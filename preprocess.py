@@ -97,12 +97,13 @@ def preprocess_json():
     for root, dirs, files in os.walk('.', topdown=False):
         for name in files:
             if name.startswith('newspapers_157_upsampled'):
+                print(name)
                 file = open(os.path.join(root, name))
                 data = json.load(file)
                 jsonList = []
                 for line in data:
                     content = re.sub(url, '', line['Content'], flags=re.MULTILINE)
-                    content = re.sub(email, '', line['Content'], flags=re.MULTILINE)
+                    content = re.sub(email, '', content, flags=re.MULTILINE)
                     jsonList.append({"Newspaper": line['Newspaper'], "Content": content})
                 file.close()
                 os.remove(name)
@@ -157,8 +158,8 @@ def main():
     preprocess_json()
 
     # Preprocess data for plotting
-    df = pd.DataFrame(list(zip(labels, documents)), columns=['Labels', 'Documents'])
-    df.Documents = df.Documents.apply(lambda x: preprocess(x))
+    #df = pd.DataFrame(list(zip(labels, documents)), columns=['Labels', 'Documents'])
+    #df.Documents = df.Documents.apply(lambda x: preprocess(x))
 
     # Data analysis by plotting the distribution and possible wordclouds
     #plot_distribution(df)

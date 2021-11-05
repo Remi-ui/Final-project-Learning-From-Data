@@ -48,6 +48,7 @@ def read_data():
         
     return documents, labels
 
+
 def train_naive_bayes(X_train, Y_train):
     '''Trains a Naive Bayes model on the provided train data with
     Tfidf vectors.'''
@@ -61,7 +62,7 @@ def train_svm(X_train, Y_train):
     '''Trains a Support Vector machine with an rbf kernel on the provided
     train data with Tfidf vectors.'''
     vec = TfidfVectorizer()
-    svm_classifier = Pipeline([('vec', vec), ('svc', LinearSVC(random_state=random_state))])
+    svm_classifier = Pipeline([('vec', vec), ('svc', LinearSVC())])
     svm_classifier = svm_classifier.fit(X_train, Y_train)
     return svm_classifier
 
@@ -71,7 +72,7 @@ def train_svm_optimized(X_train, Y_train):
     Tfidf vectors. The parameter grid dictionary can be expanded with additional parameters.
     Currently optimizes the C value, penalty, loss and tol parameters.'''
     vec = TfidfVectorizer()
-    svm_classifier = Pipeline([('vec', vec), ('linearsvc', LinearSVC(random_state=random_state))])
+    svm_classifier = Pipeline([('vec', vec), ('linearsvc', LinearSVC())])
     svm_classifier = svm_classifier.fit(X_train, Y_train)
     #print(svm_classifier.get_params().keys())
     f1 = evaluate.model_report(svm_classifier)
