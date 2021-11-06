@@ -21,9 +21,9 @@ python3 evaluate.py --model svm --eval newspapers_157_upsampled_dev.json
 ```
 --model accepts: naive_bayes, svm, svm_optimized, lstm, bert. By default it will train an SVM.
 <h2>How to preprocess the data so it is in the correct format</h2>  
-
-<h2>How to train the models on the data</h2>
-
+ ```
+ INSERT COMMAND FOR THIS
+ ```
 <h2>How to use one of your already trained models to predict on unseen data</h2>
 
  As both LSTM models and BERT models take quite some time to train some models are available to use straight away. 
