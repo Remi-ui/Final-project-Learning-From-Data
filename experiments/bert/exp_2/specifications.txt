@@ -1,6 +1,5 @@
 Seed: 11
 Model: full_with_callback_SGD_dropout_001.h5
-learning: Adam(0.00001)
 SGD(learning_rate=0.01)
 Batch size: 32
 Epochs: 4
