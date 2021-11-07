@@ -1,0 +1,9 @@
+Seed: 11
+Learning: Adam(0.001)
+Batch size: 16
+Epochs: 4
+Layers:
+ - Embedding
+ - Bidirectional LSTM
+ - Bidirectional LSTM
+ - Dense

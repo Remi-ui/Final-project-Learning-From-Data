@@ -1,0 +1,10 @@
+Seed: 11
+Learning: SGD(0.001)
+Batch size: 16
+Epochs: 4
+Layers:
+ - Embedding
+ - Bidirectional LSTM
+ - Dropout 0.2
+ - Bidirectional LSTM
+ - Dense
