@@ -1,17 +1,16 @@
-import os
 import json
 import random as python_random
 import time
+import os
 from collections import Counter
 
 import numpy as np
-from sklearn.model_selection import train_test_split
 from tensorflow.keras.layers import TextVectorization
 import tensorflow as tf
-from sklearn.preprocessing import LabelBinarizer, LabelEncoder
+from sklearn.preprocessing import LabelBinarizer
 from tensorflow.keras.optimizers import SGD, Adam
 from keras.models import Sequential
-from keras.layers import Embedding, LSTM, Dropout
+from keras.layers import Embedding, LSTM, Dropout, Bidirectional
 from keras.layers.core import Dense
 from keras.initializers import Constant
 from sklearn.metrics import accuracy_score
@@ -23,23 +22,6 @@ python_random.seed(11)
 
 
 def read_data(directory):
-    i = 0
-    documents = []
-    labels = []
-    os.chdir(directory)
-    for root, dirs, files in os.walk('.', topdown=False):
-        for name in files:
-            if name.endswith('filt3.sub.json'):
-                file = open(os.path.join(root, name))
-                text = json.load(file)
-                for article in text['articles']:
-                    i += 1
-                    documents.append(article['body'])
-                    labels.append(article['newspaper'])
-    return documents, labels
-
-
-def read_data2(directory):
     labels = []
     documents = []
     f = open(directory)
@@ -47,7 +29,6 @@ def read_data2(directory):
     for i in data:
         labels.append(i['Newspaper'])
         documents.append(i['Content'])
-
     return documents, labels
 
 
@@ -73,40 +54,31 @@ def get_emb_matrix(voc, emb):
 
 def create_model(Y_train, emb_matrix):
     '''Create the Keras model to use'''
-    learning_rate = 0.01
+    learning_rate = 0.001
     loss_function = 'categorical_crossentropy'
-    # optim = SGD(learning_rate=learning_rate)
     optim = Adam(learning_rate=learning_rate)
     embedding_dim = len(emb_matrix[0])
     num_tokens = len(emb_matrix)
     num_labels = 9
 
-    # Simple LSTM
+    # Bidirectional LSTM with 2 LSTM layers
     model = Sequential()
-    model.add(Embedding(num_tokens, embedding_dim, embeddings_initializer=Constant(emb_matrix), trainable=True))
-    model.add(LSTM(units=128, input_dim=embedding_dim))
+    model.add(Embedding(num_tokens, embedding_dim, embeddings_initializer=Constant(emb_matrix),trainable=True))
+    model.add(Bidirectional(LSTM(units=128, input_dim=embedding_dim, return_sequences=True)))
+    model.add(Dropout(0.2))
+    model.add(Bidirectional(LSTM(units=128, input_dim=embedding_dim)))
     model.add(Dropout(0.2))
     model.add(Dense(input_dim=embedding_dim, units=num_labels, activation="softmax"))
     model.compile(loss=loss_function, optimizer=optim, metrics=['accuracy'])
-
-    # Bidirectional LSTM with 2 LSTM layers
-    # model = Sequential()
-    # model.add(Embedding(num_tokens, embedding_dim, embeddings_initializer=Constant(emb_matrix),trainable=True))
-    # model.add(Bidirectional(LSTM(units=128, input_dim=embedding_dim, return_sequences=True)))
-    # model.add(Dropout(0.2))
-    # model.add(Bidirectional(LSTM(units=128, input_dim=embedding_dim)))
-    # model.add(Dense(input_dim=embedding_dim, units=num_labels, activation="softmax"))
-    # model.compile(loss=loss_function, optimizer=optim, metrics=['accuracy'])
 
     return model
 
 
 def train_model(model, X_train, Y_train, X_dev, Y_dev):
-    '''Train the model here. Note the different settings you can experiment with!'''
     verbose = 1
     batch_size = 16
     epochs = 10
-    callback = tf.keras.callbacks.EarlyStopping(monitor='val_loss', patience=3)
+    callback = tf.keras.callbacks.EarlyStopping(monitor='val_loss', patience=100)
 
     t0 = time.time()
     model.fit(X_train, Y_train, verbose=verbose, epochs=epochs,
@@ -122,34 +94,31 @@ def test_set_predict(model, X_test, Y_test, ident):
     '''Do predictions and measure accuracy on our own test set (that we split off train)'''
     # Get predictions using the trained model
     Y_pred = model.predict(X_test)
-    # Finally, convert to numerical labels to get scores with sklearn
+    i = 0
+    if ident == "dev":
+        with open('prediction_vs_gold_dev_11.txt', 'w') as file:
+            for item in Y_test:
+                file.write("{} - {}\n".format(item, Y_pred[i]))
+                i += 1
+        file.close()
+    elif ident == "test":
+        with open('prediction_vs_gold_test_11.txt', 'w') as file:
+            for item in Y_test:
+                file.write("{} - {}\n".format(item, Y_pred[i]))
+                i += 1
+        file.close()
+
     Y_pred = np.argmax(Y_pred, axis=1)
-    # If you have gold data, you can calculate accuracy
     Y_test = np.argmax(Y_test, axis=1)
     print('Accuracy on own {1} set: {0}'.format(round(accuracy_score(Y_test, Y_pred), 3), ident))
     print(classification_report(Y_test, Y_pred))
 
 
-def main():
-    # On this data I get an accuracy of ~0.7
-    X_train, Y_train = read_data('/content/drive/MyDrive/Project/train')
-    X_dev, Y_dev = read_data('/content/drive/MyDrive/Project/dev')
-    X_train, Y_train = X_train[:4956], Y_train[:4956]
-    X_test, Y_test = read_data('/content/drive/MyDrive/Project/test')
-    X_train, X_dev, Y_train, Y_dev = train_test_split(X_train + X_dev + X_test, Y_train + Y_dev + Y_test,
-                                                      test_size=0.2, random_state=0, shuffle=True)
-    X_dev, X_test, Y_dev, Y_test = train_test_split(X_dev, Y_dev, test_size=0.5,
-                                                    random_state=0, shuffle=True)
+def main(X_train, Y_train):
+    X_dev, Y_dev = read_data('../Final-project-Learning-From-Data/newspapers_157_upsampled_dev.json')
+    X_test, Y_test = read_data('../Final-project-Learning-From-Data/newspapers_157_upsampled_test.json')
+    embeddings = read_embeddings('../Final-project-Learning-From-Data/glove/glove.6B.100d.txt')
 
-    # On this data I get an accuracy of 0.111 (random guess)
-    # X_train, Y_train = read_data2('/content/drive/MyDrive/Project/newspapers_157_upsampled.json')
-    # X_dev, Y_dev = read_data2('/content/drive/MyDrive/Project/newspapers_157_upsampled_dev.json')
-    # X_test, Y_test = read_data2('/content/drive/MyDrive/Project/newspapers_157_upsampled_test.json')
-    print(Counter(Y_train))
-    print(Counter(Y_dev))
-    print(Counter(Y_test))
-
-    embeddings = read_embeddings('/content/drive/MyDrive/glove/glove.6B.100d.txt')
     vectorizer = TextVectorization(standardize=None, output_sequence_length=200)
 
     text_ds = tf.data.Dataset.from_tensor_slices(X_train + X_dev)
@@ -162,11 +131,6 @@ def main():
     Y_train_bin = encoder.fit_transform(Y_train)
     Y_dev_bin = encoder.fit_transform(Y_dev)
 
-    # encoder = LabelEncoder()
-    # encoder.fit(Y_train + Y_dev)
-    # Y_train_bin = encoder.transform(Y_train)
-    # Y_dev_bin = encoder.transform(Y_dev)
-
     model = create_model(Y_train, emb_matrix)
 
     X_train_vect = vectorizer(np.array([[s] for s in X_train])).numpy()
@@ -177,6 +141,8 @@ def main():
     Y_test_bin = encoder.fit_transform(Y_test)
     X_test_vect = vectorizer(np.array([[s] for s in X_test])).numpy()
     test_set_predict(model, X_test_vect, Y_test_bin, "test")
+
+    return model
 
 
 if __name__ == '__main__':
