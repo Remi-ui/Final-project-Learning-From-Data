@@ -35,9 +35,9 @@ python3 evaluate.py --model svm --eval COP25.filt3.sub.json
 
 <h2>How to use one of your already trained models to predict on unseen data</h2>
 
- As both LSTM models and BERT models take quite some time to train some models are available to use straight away. 
+ As both BERT models take quite some time to train some models are available to use straight away. These models can be found at: INSERT_LINK.com. If you'd like to run model1.h5 for example. Use the following command
  ```
- INSERT COMMAND FOR THIS
+ python3 evaluate.py --model bert --saved_model model1.h5
  ```
  
 <h2>How to evaluate an output file using the gold standard</h2>
