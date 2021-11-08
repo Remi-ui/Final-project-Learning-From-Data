@@ -3,6 +3,8 @@ import random as python_random
 import time
 import os
 from collections import Counter
+import evaluate
+import predict
 
 import numpy as np
 from tensorflow.keras.layers import TextVectorization
@@ -116,7 +118,8 @@ def test_set_predict(model, X_test, Y_test, ident):
 
 def main(X_train, Y_train):
     X_dev, Y_dev = read_data('../Final-project-Learning-From-Data/newspapers_157_upsampled_dev.json')
-    X_test, Y_test = read_data('../Final-project-Learning-From-Data/newspapers_157_upsampled_test.json')
+    X_test, Y_test = predict.read_data()
+
     embeddings = read_embeddings('../Final-project-Learning-From-Data/glove/glove.txt')
 
     vectorizer = TextVectorization(standardize=None, output_sequence_length=200)

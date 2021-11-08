@@ -12,6 +12,7 @@ from sklearn.model_selection import train_test_split
 
 import evaluate
 import predict
+import lstm
 from collections import Counter
 
 import numpy as np
@@ -155,7 +156,7 @@ def train_model(model):
         svm_classifier = train_svm_optimized(X_train, Y_train)
         return svm_classifier, 'svm_opt'
     elif model == 'lstm':
-        lstm_model = train_lstm(X_train, Y_train)
+        lstm_model = lstm.main(X_train, Y_train)
         return lstm_model, 'lstm'
     elif model == 'bert':
         vocab_file = bert_layer.resolved_object.vocab_file.asset_path.numpy()
