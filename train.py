@@ -19,6 +19,7 @@ import numpy as np
 import tensorflow_hub as hub
 import tokenization
 import tensorflow as tf
+from keras.models import load_model
 from tensorflow.keras.layers import Dense, Input, Bidirectional, LSTM, Dropout, Flatten
 from tensorflow.keras.optimizers import Adam, SGD
 from tensorflow.keras.models import Model
@@ -97,7 +98,6 @@ def train_svm_optimized(X_train, Y_train):
 
 def bert_encode(texts, tokenizer, max_len=512):
     ''' Encodes all text for bert '''
-    #texts = np.array(texts)[indices.astype(int)]
     all_tokens = []
     all_masks = []
     all_segments = []
@@ -130,11 +130,8 @@ def train_bert(bert_layer, max_len=512):
 
     _, sequence_output = bert_layer([input_word_ids, input_mask, segment_ids])
     clf_output = sequence_output[:, 0, :]
-    x = tf.expand_dims(clf_output, axis=-1)
-    #x = LSTM(128)(x)
     #x = Dropout(0.25)(x)
-    x = Flatten()(x)
-    x = Dense(9, activation='softmax')(x)
+    x = Dense(9, activation='softmax')(clf_output)
     opt = Adam(learning_rate=0.00001)
 
     model = Model(inputs=[input_word_ids, input_mask, segment_ids], outputs=x)
@@ -183,10 +180,13 @@ def train_model(model):
         Y_train_vec = np_utils.to_categorical(le.fit_transform(Y_train))
         
         X_dev, Y_dev = read_data_dev_bert()
+        X_test, Y_test = predict.read_data()
         Y_dev = np_utils.to_categorical(le.fit_transform(Y_dev))
+        Y_test = np_utils.to_categorical(le.fit_transform(Y_test))
 
         train_input = bert_encode(X_train, tokenizer, max_len=200)
         dev_input = bert_encode(X_dev, tokenizer, max_len=200)
+        X_test = bert_encode(X_test, tokenizer, max_len=200)
         
         train_labels = Y_train_vec
         dev_labels = Y_dev
@@ -199,13 +199,13 @@ def train_model(model):
                 train_input, train_labels,
                 validation_data=(dev_input, dev_labels),
                 epochs=10,
-                batch_size=8,
+                batch_size=16,
                 callbacks=[callback]
             )
         else:
             bert_model = load_model((args.saved_model),custom_objects={'KerasLayer':hub.KerasLayer})
-
-        return bert_model, dev_input, dev_labels
+        
+        return bert_model, X_test, Y_test
     else:
         print('Something went wrong, please execute this program again and type --help after.')
 

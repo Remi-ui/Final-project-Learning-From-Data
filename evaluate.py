@@ -69,12 +69,12 @@ def read_file_bert(file):
     class_report = report(gold, predict, digits=3)
     print(class_report)
 
-def model_report_bert(bert_model, dev_input, dev_labels):
+def model_report_bert(bert_model, X_test, Y_test):
     ''' Prints a classification report for bert models '''
-    predictions = bert_model.predict(dev_input)
+    predictions = bert_model.predict(X_test)
     i=0
     with open('experiments/prediction_vs_gold.txt', 'w') as f:
-        for item in dev_labels:
+        for item in Y_test:
             f.write("{} - {}\n".format(item, predictions[i]))
             i+=1
     f.close()
@@ -96,11 +96,12 @@ def model_report(model):
 
 def main():
     args = create_arg_parser()
-    model = train.train_model(args.model)
     if args.model == 'bert':
-        bert_model, dev_input, dev_labels = train.train_model(args.model)
-        model_report_bert(bert_model, dev_input, dev_labels)
-    elif args.model != 'lstm':
+        bert_model, X_test, Y_test = train.train_model(args.model)
+        model_report_bert(bert_model, X_test, Y_test)
+    elif args.model == 'lstm':
+        model = train.train_model(args.model)
+    else:
         model = train.train_model(args.model)
         model_report(model)
 
