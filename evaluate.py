@@ -30,8 +30,9 @@ def model_report(model):
 
 def main():
     args = create_arg_parser()
-    model = train.train_model(args.model)
-    model_report(model)
+    model, type = train.train_model(args.model)
+    if type != 'lstm':
+        model_report(model)
 
 
 if __name__ == '__main__':

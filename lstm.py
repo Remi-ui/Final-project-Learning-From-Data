@@ -117,7 +117,7 @@ def test_set_predict(model, X_test, Y_test, ident):
 def main(X_train, Y_train):
     X_dev, Y_dev = read_data('../Final-project-Learning-From-Data/newspapers_157_upsampled_dev.json')
     X_test, Y_test = read_data('../Final-project-Learning-From-Data/newspapers_157_upsampled_test.json')
-    embeddings = read_embeddings('../Final-project-Learning-From-Data/glove/glove.6B.100d.txt')
+    embeddings = read_embeddings('../Final-project-Learning-From-Data/glove/glove.txt')
 
     vectorizer = TextVectorization(standardize=None, output_sequence_length=200)
 

@@ -98,11 +98,6 @@ def train_svm_optimized(X_train, Y_train):
     return svm_classifier
 
 
-def train_lstm(X_train, Y_train):
-    print('Still some code needed!')
-    return
-
-
 def bert_encode(texts, tokenizer, max_len=512):
     #texts = np.array(texts)[indices.astype(int)]
     all_tokens = []
@@ -152,15 +147,16 @@ def train_model(model):
 
     if model == 'naive_bayes':
         naive_classifier = train_naive_bayes(X_train, Y_train)
-        return naive_classifier
+        return naive_classifier, 'nb'
     elif model == 'svm':
         svm_classifier = train_svm(X_train, Y_train)
-        return svm_classifier
+        return svm_classifier, 'svm'
     elif model == 'svm_optimized':
         svm_classifier = train_svm_optimized(X_train, Y_train)
-        return svm_classifier
+        return svm_classifier, 'svm_opt'
     elif model == 'lstm':
         lstm_model = train_lstm(X_train, Y_train)
+        return lstm_model, 'lstm'
     elif model == 'bert':
         vocab_file = bert_layer.resolved_object.vocab_file.asset_path.numpy()
         do_lower_case = bert_layer.resolved_object.do_lower_case.numpy()
@@ -189,7 +185,7 @@ def train_model(model):
 
         #bert_model.save("gdrive/MyDrive/AS5/my_model.h5") #using h5 extension
         bert_model.save_weights('model.hdf5')
-        return bert_model
+        return bert_model, 'bert'
     else:
         print('Something went wrong, please execute this program again and type --help after.')
 
