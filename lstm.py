@@ -78,7 +78,7 @@ def create_model(Y_train, emb_matrix):
 
 def train_model(model, X_train, Y_train, X_dev, Y_dev):
     verbose = 1
-    batch_size = 16
+    batch_size = 4
     epochs = 10
     callback = tf.keras.callbacks.EarlyStopping(monitor='val_loss', patience=100)
 

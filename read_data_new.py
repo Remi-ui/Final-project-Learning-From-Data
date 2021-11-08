@@ -7,6 +7,7 @@ import nltk
 from collections import Counter
 
 def read_data():
+    ''' Reads the data and splits of 440 of each label '''
     labels = []
     documents = []
     f = open('newspapers_157.json')
@@ -29,8 +30,6 @@ def read_data():
         labels.append(i['Newspaper'])
         documents.append(doc)
         y.append(x)
-
-    #times o india, the hindu
 
     return documents, labels, y
 

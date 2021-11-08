@@ -32,10 +32,6 @@ tf.random.set_seed(11)
 random.seed(11)
 random_state = 11
 
-module_url = "https://tfhub.dev/tensorflow/bert_en_uncased_L-12_H-768_A-12/1"
-bert_layer = hub.KerasLayer(module_url, trainable=True)
-
-
 def read_data():
     '''Reads the upsampled data and returns the documents (article) and the labels (newspaper)
     in a list.'''
@@ -100,6 +96,7 @@ def train_svm_optimized(X_train, Y_train):
 
 
 def bert_encode(texts, tokenizer, max_len=512):
+    ''' Encodes all text for bert '''
     #texts = np.array(texts)[indices.astype(int)]
     all_tokens = []
     all_masks = []
@@ -125,6 +122,8 @@ def bert_encode(texts, tokenizer, max_len=512):
 
 
 def train_bert(bert_layer, max_len=512):
+    ''' Trains a bert model'''
+
     input_word_ids = Input(shape=(max_len,), dtype=tf.int32, name="input_word_ids")
     input_mask = Input(shape=(max_len,), dtype=tf.int32, name="input_mask")
     segment_ids = Input(shape=(max_len,), dtype=tf.int32, name="segment_ids")
@@ -142,23 +141,40 @@ def train_bert(bert_layer, max_len=512):
     model.compile(optimizer=opt , loss='categorical_crossentropy', metrics=['accuracy'])
     return model
 
+def read_data_dev_bert():
+    ''' Reads development data that bert needs during training to determine when 
+    the stoploss should occur. '''
+    labels_dev = []
+    documents_dev = []
+    f = open('newspapers_157_upsampled_dev.json')
+    data = json.load(f)
+    for i in data:
+        labels_dev.append(i['Newspaper'])
+        documents_dev.append(i['Content'])
+    return documents_dev, labels_dev
+
 
 def train_model(model):
+    ''' Trains the desired model '''
     X_train, Y_train = read_data()
 
     if model == 'naive_bayes':
         naive_classifier = train_naive_bayes(X_train, Y_train)
-        return naive_classifier, 'nb'
+        return naive_classifier
     elif model == 'svm':
         svm_classifier = train_svm(X_train, Y_train)
-        return svm_classifier, 'svm'
+        return svm_classifier
     elif model == 'svm_optimized':
         svm_classifier = train_svm_optimized(X_train, Y_train)
-        return svm_classifier, 'svm_opt'
+        return svm_classifier
     elif model == 'lstm':
         lstm_model = lstm.main(X_train, Y_train)
-        return lstm_model, 'lstm'
+        return lstm_model
     elif model == 'bert':
+        args = evaluate.create_arg_parser()
+
+        module_url = "https://tfhub.dev/tensorflow/bert_en_uncased_L-12_H-768_A-12/1"
+        bert_layer = hub.KerasLayer(module_url, trainable=True)
         vocab_file = bert_layer.resolved_object.vocab_file.asset_path.numpy()
         do_lower_case = bert_layer.resolved_object.do_lower_case.numpy()
         tokenizer = tokenization.FullTokenizer(vocab_file, do_lower_case)
@@ -166,7 +182,7 @@ def train_model(model):
         le = LabelEncoder()
         Y_train_vec = np_utils.to_categorical(le.fit_transform(Y_train))
         
-        X_dev, Y_dev = predict.read_data()
+        X_dev, Y_dev = read_data_dev_bert()
         Y_dev = np_utils.to_categorical(le.fit_transform(Y_dev))
 
         train_input = bert_encode(X_train, tokenizer, max_len=200)
@@ -176,17 +192,20 @@ def train_model(model):
         dev_labels = Y_dev
 
         bert_model = train_bert(bert_layer, max_len=200)
+        
+        if args.saved_model == '':
+            callback = tf.keras.callbacks.EarlyStopping(monitor='val_loss', patience=3)
+            bert_model.fit(
+                train_input, train_labels,
+                validation_data=(dev_input, dev_labels),
+                epochs=10,
+                batch_size=8,
+                callbacks=[callback]
+            )
+        else:
+            bert_model = load_model((args.saved_model),custom_objects={'KerasLayer':hub.KerasLayer})
 
-        bert_model.fit(
-            train_input, train_labels,
-            validation_data=(dev_input, ra),
-            epochs=1,
-            batch_size=16
-        )
-
-        #bert_model.save("gdrive/MyDrive/AS5/my_model.h5") #using h5 extension
-        bert_model.save_weights('model.hdf5')
-        return bert_model, 'bert'
+        return bert_model, dev_input, dev_labels
     else:
         print('Something went wrong, please execute this program again and type --help after.')
 

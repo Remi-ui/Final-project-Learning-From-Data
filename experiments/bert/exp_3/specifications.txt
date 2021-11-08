@@ -1,6 +1,5 @@
 The seed used is in the file name
 Model: full_with_callback_SGD_dropout_001_second
-epochs: 6
 SGD(learning_rate=0.001)
 Dropout(0.25)
 Batch size 32

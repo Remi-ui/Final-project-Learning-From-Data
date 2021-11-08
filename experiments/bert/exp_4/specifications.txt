@@ -1,6 +1,5 @@
-Seed: 11
-Dropout(0.25)(clf_output)
+The seed is in the file name
+Dropout(0.25)
 Adam(learning_rate=0.00001)
 full_with_callback_Adam_.h5
-Epochs: 4
 Batch_size: 32

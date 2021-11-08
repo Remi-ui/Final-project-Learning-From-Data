@@ -1,5 +1,8 @@
 import json
+from sklearn.metrics import classification_report as report
+from sklearn.naive_bayes import MultinomialNB
 import evaluate
+import os
 
 
 def read_data():
@@ -15,7 +18,7 @@ def read_data():
         for i in data:
             labels_dev.append(i['Newspaper'])
             documents_dev.append(i['Content'])
-    elif args.eval == 'COP25.filt3.sub.json':
+    else:
         f = open(args.eval)
         data = json.load(f)
         for article in data['articles']:

@@ -3,6 +3,7 @@ import argparse
 
 
 def create_arg_parser():
+    ''' Creates argparses for this script '''
     parser = argparse.ArgumentParser()
     parser.add_argument('--path', default = 'experiments/prediction_vs_gold_11.txt', type=str)
     parser.add_argument('--bert', default = False)
@@ -14,6 +15,7 @@ prediction = []
 
 
 def read_file(path):
+    ''' Reads the prediction vs gold standard file and prints a classification report '''
     with open(path) as f:
         for line in f:
             line = line.replace('\n', '')
@@ -25,6 +27,8 @@ def read_file(path):
 
 
 def read_file_bert(path):
+    ''' Reads the prediction vs gold standard file and prints a classification report
+    for bert generated files '''
     j = 0
     complete = ""
     new_list = []
