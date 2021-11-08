@@ -74,7 +74,6 @@ def train_svm_optimized(X_train, Y_train):
     vec = TfidfVectorizer()
     svm_classifier = Pipeline([('vec', vec), ('linearsvc', LinearSVC())])
     svm_classifier = svm_classifier.fit(X_train, Y_train)
-    #print(svm_classifier.get_params().keys())
     f1 = evaluate.model_report(svm_classifier)
     param_grid = {
         'linearsvc__C': [0.01, 0.1, 1, 10],
@@ -85,18 +84,8 @@ def train_svm_optimized(X_train, Y_train):
         'vec__stop_words': ['english', None]
     }
 
-    # Optimal svc: 'linearsvc__C': 0.1, 'linearsvc__loss': 'squared_hinge',
-    # 'linearsvc__penalty': 'l2', 'linearsvc__tol': 0.0001, 'vec__ngram_range': (1, 1), 'vec__stop_words': None
-    param_grid = {
-        'linearsvc__C': [0.1],
-        'linearsvc__loss': ['squared_hinge'],
-        'linearsvc__penalty': ['l2'],
-        'linearsvc__tol': [0.0001],
-        'vec__ngram_range': [(1, 1)],
-        'vec__stop_words': [None]
-    }
-
     best_score = f1
+    best_grid = {}
     for g in ParameterGrid(param_grid):
         if g['linearsvc__loss'] != 'hinge' and g['linearsvc__penalty'] != 'l1':
             svm_classifier.set_params(**g)
@@ -104,10 +93,8 @@ def train_svm_optimized(X_train, Y_train):
             current_score = evaluate.model_report(svm_classifier)
             if current_score > best_score:
                 best_score = current_score
-                best_grid = g
     svm_classifier.set_params(**best_grid)
     svm_classifier.fit(X_train, Y_train)
-    print(best_grid)
     return svm_classifier
 
 

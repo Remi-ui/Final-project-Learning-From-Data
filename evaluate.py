@@ -23,7 +23,6 @@ def model_report(model):
             f.write("{} - {}\n".format(item, predictions[i]))
             i+=1
     f.close()
-
     class_report = report(Y_dev, predictions, digits=3)
     print(class_report)
     return f1_score(Y_dev, predictions, average='weighted')

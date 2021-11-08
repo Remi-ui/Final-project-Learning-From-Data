@@ -1,6 +1,7 @@
 from sklearn.metrics import classification_report as report
 import argparse
 
+
 def create_arg_parser():
     parser = argparse.ArgumentParser()
     parser.add_argument('--path', default = 'experiments/prediction_vs_gold_11.txt', type=str)
@@ -10,6 +11,8 @@ def create_arg_parser():
 
 gold_standard = []
 prediction = []
+
+
 def read_file(path):
     with open(path) as f:
         for line in f:
@@ -19,6 +22,7 @@ def read_file(path):
             prediction.append(line[1])
     class_report = report(gold_standard, prediction, digits=3)
     print(class_report)
+
 
 def read_file_bert(path):
     j = 0
