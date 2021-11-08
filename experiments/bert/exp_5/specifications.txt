@@ -1,5 +1,4 @@
-Seed: 11
+The seed is in the file name
 Model: full_with_callback_adapted.h5
 learning: Adam(0.000001)
 Batch size: 32
-Epochs: 7
