@@ -39,7 +39,7 @@ python3 evaluate.py --model svm --eval COP25.filt3.sub.json
 
 As BERT models take quite some time to train our best 2 models are available to use straight away. These models can be found at: https://www.transferxl.com/details/08v9jCqysVNfJJ. If you'd like to run model_1.h5 for example. Use the following command
  ```
- python3 evaluate.py --model bert --saved_model model1.h5
+ python3 evaluate.py --model bert --saved_model model_1.h5
  ```
  
 <h2>How to evaluate an output file using the gold standard</h2>
