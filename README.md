@@ -35,7 +35,7 @@ python3 evaluate.py --model svm --eval COP25.filt3.sub.json
 
 <h2>How to use one of your already trained models to predict on unseen data</h2>
 
- As both BERT models take quite some time to train some models are available to use straight away. These models can be found at: INSERT_LINK.com. If you'd like to run model1.h5 for example. Use the following command
+ As both BERT models take quite some time to train some models are available to use straight away. These models can be found at: https://www.transferxl.com/details/08v9jCqysVNfJJ. If you'd like to run model_1.h5 for example. Use the following command
  ```
  python3 evaluate.py --model bert --saved_model model1.h5
  ```
