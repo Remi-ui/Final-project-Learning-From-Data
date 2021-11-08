@@ -10,6 +10,8 @@ Robert van Timmeren - r.j.van.timmeren@student.rug.nl
 The required dependencies can be installed with:
 ```
 pip install -r requirements.txt
+!wget --quiet https://raw.githubusercontent.com/tensorflow/models/master/official/nlp/bert/tokenization.py
+!pip install sentencepiece
 ```
 
 <h2>Additional dependencies</h2>
