@@ -24,6 +24,7 @@ python_random.seed(11)
 
 
 def read_data(directory):
+    '''Reads the test development set to tune the model on.'''
     labels = []
     documents = []
     f = open(directory)
@@ -35,6 +36,8 @@ def read_data(directory):
 
 
 def read_embeddings(embeddings_file):
+    '''Reads the embeddings and returns a dictionary with all
+    the embeddings available.'''
     embeddings = open(embeddings_file, 'r', encoding='utf-8')
     embeddings_list = [line.split() for line in embeddings]
     embeddings.close()
@@ -42,7 +45,7 @@ def read_embeddings(embeddings_file):
 
 
 def get_emb_matrix(voc, emb):
-    '''Get embedding matrix given vocab and the embeddings'''
+    '''Gets the embedding matrix given vocabalurary and the embeddings.'''
     num_tokens = len(voc) + 2
     word_index = dict(zip(voc, range(len(voc))))
     embedding_dim = len(emb["the"])
@@ -55,7 +58,8 @@ def get_emb_matrix(voc, emb):
 
 
 def create_model(Y_train, emb_matrix):
-    '''Create the Keras model to use'''
+    '''Creates the bidirectional LSTM with 2 LSTM layers and 2x0.2 dropout
+    layers. Returns the model.'''
     learning_rate = 0.001
     loss_function = 'categorical_crossentropy'
     optim = Adam(learning_rate=learning_rate)
@@ -77,6 +81,8 @@ def create_model(Y_train, emb_matrix):
 
 
 def train_model(model, X_train, Y_train, X_dev, Y_dev):
+    '''Trains the bidirectional LSTM on the train and development set
+    and displays the time it took to train.'''
     verbose = 1
     batch_size = 4
     epochs = 10
@@ -93,8 +99,8 @@ def train_model(model, X_train, Y_train, X_dev, Y_dev):
 
 
 def test_set_predict(model, X_test, Y_test, ident):
-    '''Do predictions and measure accuracy on our own test set (that we split off train)'''
-    # Get predictions using the trained model
+    '''Predicts on the supplied test set and measures
+     its performance on the dev or test set.'''
     Y_pred = model.predict(X_test)
     i = 0
     if ident == "dev":
@@ -117,9 +123,10 @@ def test_set_predict(model, X_test, Y_test, ident):
 
 
 def main(X_train, Y_train):
+    '''Main function for calling the LSTM model. Ensures the data and embeddings are read
+    and put into the correct variables, etc. Finally returns the model.'''
     X_dev, Y_dev = read_data('../Final-project-Learning-From-Data/newspapers_157_upsampled_dev.json')
     X_test, Y_test = predict.read_data()
-
     embeddings = read_embeddings('../Final-project-Learning-From-Data/glove/glove.txt')
 
     vectorizer = TextVectorization(standardize=None, output_sequence_length=200)
@@ -146,7 +153,6 @@ def main(X_train, Y_train):
     test_set_predict(model, X_test_vect, Y_test_bin, "test")
 
     return model
-
 
 
 if __name__ == '__main__':
