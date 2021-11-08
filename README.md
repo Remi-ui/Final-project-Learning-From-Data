@@ -12,9 +12,13 @@ The required dependencies can be installed with:
 pip install -r requirements.txt
 ```
 
+<h2>Additional dependencies</h2>
+
+The LSTM model makes use of pre-trained static embeddings (GloVe). Due to upload constraints of Github you should supply your own .txt embeddings in the glove folder and name them glove.txt. This means that the program is able to locate your embeddings at: ../Final-project-Learning-From-Data/glove/glove.txt.
+
 <h2>How to train the model</h2>
 
-5 different models can be trained: Naive Bayes, an SVM, an optimized SVM, and LSTM and a BERT model. These can all be specified in the command line by using --model <model> while running evaluate.py. By default this will be evaluated on "newspapers_157_upsampled_test.json" (no command line argument is needed when evaluating on the test set), however a different file can be specified with --eval path/to/file. If you would like to evaluate an SVM on the development set for example use the following command:
+5 different models can be trained: Naive Bayes, an SVM, an optimized SVM, and LSTM (GloVe) and a BERT model. These can all be specified in the command line by using --model <model> while running evaluate.py. By default this will be evaluated on "newspapers_157_upsampled_test.json" (no command line argument is needed when evaluating on the test set), however a different file can be specified with --eval path/to/file. If you would like to evaluate an SVM on the development set for example use the following command:
 
 ```
 python3 evaluate.py --model svm --eval newspapers_157_upsampled_dev.json
